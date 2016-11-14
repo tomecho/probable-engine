@@ -24,7 +24,7 @@ class ApplicationController < ActionController::Base
   def render_404
     respond_to do |format|
       format.html { render template: 'errors/404.html.erb', status: 404 }
-      format.all { render nothing: true, status: 404 }
+      format.all { render body: nil, status: 404 }
     end
   end
 
@@ -38,7 +38,7 @@ class ApplicationController < ActionController::Base
 
     respond_to do |format|
       format.html { render template: 'errors/500.html.erb', status: 500 }
-      format.all { render nothing: true, status: 500 }
+      format.all { render body: nil, status: 500 }
     end
   end
 
@@ -48,21 +48,21 @@ class ApplicationController < ActionController::Base
 
   def current_user
     # handle users approprately in production
-    #if Rails.env.production? || Rails.env.staging?
-      ## try logging in user with shibboleth info
-      #user_from_shibboleth
+    # if Rails.env.production? || Rails.env.staging?
+    ## try logging in user with shibboleth info
+    # user_from_shibboleth
 
-      ## try to retrieve user from session if didn't log in
-      #user_from_session if @current_user.nil?
+    ## try to retrieve user from session if didn't log in
+    # user_from_session if @current_user.nil?
 
-      ## raise error if user failed to log in
-      #raise MissingUserError unless @current_user 
+    ## raise error if user failed to log in
+    # raise MissingUserError unless @current_user
 
     ## assign the first user when in development
-    #elsif Rails.env.development?
-      @current_user = User.first
-      session[:user_id] = @current_user.id
-    #end
+    # elsif Rails.env.development?
+    @current_user = User.first
+    session[:user_id] = @current_user.id
+    # end
   end
 
   def has_permission?
@@ -98,13 +98,13 @@ class ApplicationController < ActionController::Base
   def user_from_shibboleth
     if request.env['fcIdNumber']
       spire_id = request.env['fcIdNumber'].split('@').first
-      @current_user = User.find_by(spire_id: spire_id)
+      @current_user = User.active.find_by(spire_id: spire_id)
       session[:user_id] = @current_user.id if @current_user
     end
   end
 
   def user_from_session
-    @current_user = User.find_by_id(session[:user_id]) if session[:user_id]
+    @current_user = User.active.find_by(id: session[:user_id]) if session[:user_id]
   end
 
   def has_global_permission?
