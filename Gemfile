@@ -76,6 +76,10 @@ end
 # permanent records
 gem 'permanent_records'
 
+# exception notifier
+gem 'exception_notification'
+gem 'slack-notifier'
+
 gem 'aggressive_inventory', git: 'https://github.com/tomecho/aggressive_inventory.git'
 
 group :development, :test do
