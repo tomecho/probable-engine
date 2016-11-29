@@ -1,6 +1,6 @@
 include InventoryExceptions
 
-if Rails.env.development?
+if true #Rails.env.development?
   puts '*****************************'
   puts 'Seeding development'
   puts '*****************************'
