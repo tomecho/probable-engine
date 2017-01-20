@@ -1,6 +1,6 @@
 class CombinedDocuments < ActiveRecord::Migration[5.0]
   def change
-    create_table "documents", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    create_table "documents", force: :cascade do |t|
       t.string   "filename",          null: false
       t.datetime "created_at",        null: false
       t.datetime "updated_at",        null: false
