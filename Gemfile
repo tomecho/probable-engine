@@ -21,6 +21,9 @@ gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'backstretch-rails'
 
+# sorts tables ui side, very useful when columns are not columns in the database
+gem 'jquery-datatables-rails', '~> 3.4.0'
+
 # Use signature pad
 gem 'signature-pad-rails', '~> 0.5'
 
@@ -44,10 +47,10 @@ gem 'bootstrap-sass', '~> 3.3.5'
 gem 'momentjs-rails', '>= 2.8.1'
 gem 'bootstrap3-datetimepicker-rails', '~> 4.14.30'
 gem 'bootstrap-switch-rails'
-gem 'will_paginate-bootstrap'
 
 # pagination
 gem 'will_paginate'
+gem 'will_paginate-bootstrap'
 
 # searchable pages
 gem 'ransack'
@@ -65,6 +68,7 @@ gem 'js-routes'
 # gem 'capistrano-rails', '~> 1.1'
 # gem 'capistrano-rvm'
 # gem 'capistrano-passenger'
+gem 'unicode_utils', '~> 1.4'
 
 group :production do
   gem 'pg' # got to use postgres for heroku

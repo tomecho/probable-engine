@@ -13,8 +13,9 @@ Rails.application.configure do
   config.consider_all_requests_local       = true
   config.action_controller.perform_caching = false
 
-  # Don't care if the mailer can't send.
-  config.action_mailer.raise_delivery_errors = false
+  # Do care if the mailer can't send.
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.perform_deliveries = true
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
     address: 'mailhub.oit.umass.edu',
@@ -45,7 +46,7 @@ Rails.application.configure do
   # config.action_view.raise_on_missing_translations = true
 
   # inventory api uri
-  config.inventory_api_uri = 'https://aggressive-epsilon.herokuapp.com/v1/' #'http://localhost:4000/v1/'#
+  config.inventory_api_uri = 'https://aggressive-epsilon.herokuapp.com/v1/' # 'http://localhost:4000/v1/'
 
   config.after_initialize do
     Rails.application.routes.default_url_options[:host] = 'localhost:3000'

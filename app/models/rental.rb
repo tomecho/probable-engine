@@ -10,7 +10,9 @@ class Rental < ActiveRecord::Base
 
   after_create :create_financial_transaction
 
-  belongs_to :user
+  belongs_to :creator, class_name: User
+  belongs_to :renter, class_name: User
+
   belongs_to :department
   belongs_to :item_type
   belongs_to :item
@@ -18,7 +20,7 @@ class Rental < ActiveRecord::Base
   has_many :digital_signature
 
   validates :reservation_id, uniqueness: true
-  validates :user_id, :start_time, :end_time, :item_type_id, :department_id, presence: true
+  validates :renter, :creator, :start_time, :end_time, :item_type, :department, presence: true
   validates :start_time, date: { after: Date.current, message: 'must be no earlier than today' }
   validates :end_time, date: { after: :start_time, message: 'must be after start' }
 
@@ -29,6 +31,10 @@ class Rental < ActiveRecord::Base
   scope :all_future_rentals, -> { reserved.where('end_time >= ?', DateTime.current) }
   scope :no_show_rentals, -> { reserved.where('end_time < ?', DateTime.current) }
   scope :inactive_rentals, -> { where(rental_status: %w(canceled dropped_off)) }
+  scope :rented_by, ->(user) { where(renter_id: user) }
+  scope :created_by, ->(user) { where(creator_id: user) }
+  scope :with_balance_due, -> { Rental.where id: Rental.select { |rental| rental.balance.positive? }.collect(&:id) }
+  scope :with_balance_over, ->(min) { Rental.where id: Rental.select { |rental| rental.balance >= min }.collect(&:id) }
 
   aasm column: :rental_status do
     state :reserved, initial: true
@@ -136,11 +142,22 @@ class Rental < ActiveRecord::Base
     arr
   end
 
-  def sum_amount
-    due = financial_transactions.where.not(transactable_type: Payment.name).sum(:amount)
-    paid = financial_transactions.where(transactable_type: Payment.name).sum(:amount)
-    due - paid # costs - payments
+  def sum_charges
+    financial_transactions.where.not(transactable_type: Payment.name).sum(:amount)
   end
+
+  def sum_payments
+    financial_transactions.where(transactable_type: Payment.name).sum(:amount)
+  end
+
+  def balance
+    sum_charges - sum_payments
+  end
+
+  # this method seems really inefficient
+  # def self.with_balance_due
+  # Rental.select { |x| x.balance > 0 }
+  # end
 
   # private
   attr_accessor :skip_reservation_validation

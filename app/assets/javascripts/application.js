@@ -13,6 +13,8 @@
 //= require jquery
 //= require jquery-ui
 //= require jquery_ujs
+//= require dataTables/jquery.dataTables
+//= require dataTables/bootstrap/3/jquery.dataTables.bootstrap
 //= require jquery-readyselector
 //= require 'jquery.backstretch'
 //= require bootstrap-sprockets
@@ -22,17 +24,12 @@
 //= require bootstrap-datetimepicker
 //= require signature-pad
 //= require_tree .
-$(document).ready(function(){
-    $('[data-toggle="tooltip"]').tooltip();
-});
 
 // Helper method for incurred_incidentals _form.html
 // Populate incurred_incidental amount textbox with base amount shown for incidental_type dropdown menu
 $(document).ready(function() {
-  $("#select_incidental_type").change(function() {
-    $("#select_incidental_type option:selected").map(function() {
-      var price = $(this).text().split('$')[1].split(')')[0]; // Parsing for extract price, regardless of number of digits
-      $("#incurred_incidental_amount").val(price);
-    });
-  });
+  $('[data-toggle="tooltip"]').tooltip(); //init tooltips
+  $('.datatable').DataTable({});
 });
+
+$( ".datepicker" ).datetimepicker(); //datepicker initialization
