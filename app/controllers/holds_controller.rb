@@ -2,8 +2,7 @@
 class HoldsController < ApplicationController
   before_action :set_hold, only: [:show, :edit, :update, :destroy, :lift]
 
-  def show
-  end
+  def show; end
 
   def index
     @holds = Hold.all
@@ -23,11 +22,10 @@ class HoldsController < ApplicationController
       flash[:warning] = 'Error creating Hold'
       render :new
     end
-    @hold.check_conflicting_rentals
+    @hold.handle_conflicting_rentals
   end
 
-  def edit
-  end
+  def edit; end
 
   def update
     if @hold.update(hold_params)
@@ -37,7 +35,7 @@ class HoldsController < ApplicationController
       flash[:warning] = 'Error updating Hold'
       render :edit
     end
-    @hold.check_conflicting_rentals
+    @hold.handle_conflicting_rentals
   end
 
   def lift
